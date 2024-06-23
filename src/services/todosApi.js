@@ -38,5 +38,10 @@ export const todosApi = createApi({
   }),
 })
 
-export const { useGetAlltodosQuery,useUpdatetodoMutation,useLazyGetAlltodosQuery,useUpdatestatustodoMutation} = todosApi
+export const {
+   useGetAlltodosQuery,
+   useLazyGetAlltodosQuery,
+  useUpdatetodoMutation,
+  useUpdatestatustodoMutation,
+} = todosApi
 

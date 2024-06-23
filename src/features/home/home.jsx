@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { updatelogin } from "../login/loginslice";
 import { useGetAlltodosQuery, useLazyGetAlltodosQuery, useUpdatestatustodoMutation, useUpdatetodoMutation, } from "../../services/todosApi";
 function Home(){
-   var [lazyTodoFn]=useLazyGetAlltodosQuery()
-     var [newtodo,setNewtodo]=useState()
+     
+     var [lazyTodoFn] = useLazyGetAlltodosQuery()
+      var [newtodo,setNewtodo]=useState()
       var [updateFn]=useUpdatetodoMutation()
     var [updatestatusFn] =  useUpdatestatustodoMutation()
     var {user} =useSelector(state=>state.loginReducer)
@@ -16,17 +17,23 @@ function Home(){
         dispatch(updatelogin(false))
     }
     function addtask(){
+      if(!document.getElementById("d1").value==""){
+          
        var temp=JSON.parse(JSON.stringify(data[0]))
-        temp.todos.push({
-              todo:newtodo,
-              status:true
-        }) 
+       temp.todos.push({
+             todo:newtodo,
+             status:true
+       }) 
        updateFn(temp).then(res=>{
-        console.log(res.data)
-        lazyTodoFn()
+        lazyTodoFn().then(res=>{
+            console.log(res)
+        })
+      
        })
        var tt=document.getElementById("d1")
        tt.value=""
+
+      }  
     }
     function done(todos){
          var temp=JSON.parse(JSON.stringify(data[0]))
@@ -40,6 +47,35 @@ function Home(){
                
             })
          
+    }
+    function undo(todos){
+        var temp=JSON.parse(JSON.stringify(data[0]))
+            temp.todos.map(updtodo=>{
+                
+                if(todos.todo===updtodo.todo){
+                    return updtodo.status=true
+                }
+            })
+            updatestatusFn(temp).then(res=>{
+            
+            })
+    }
+    function deletetodo(todos){
+        var ar=[]
+       var temp=JSON.parse(JSON.stringify(data[0]))
+           temp.todos.map(deltodo=>{
+            
+            if(!(todos.todo==deltodo.todo)){
+               ar.push(deltodo)
+                
+            }
+
+           })
+          temp.todos=[...ar]
+          updatestatusFn(temp).then(res=>{
+            
+          })    
+          
     }
     return(
         <div>
@@ -61,9 +97,9 @@ function Home(){
             <div>
                 {
                   !isLoading&& data[0].todos.map(todos=>{
-                        return  <p className="d-flex w-25 "> <p style={{width:"50%"}}>{todos.todo}</p>
-                                     {todos.status? <button onClick={()=>{done(todos)}}>Done</button>:<button>Undo</button>} &nbsp;
-                                     <button>Delete</button>
+                        return  <p className="d-flex w-25 "> <p style={todos.status?{width:"50%"}:{width:"50%",color:"red",textDecoration:"line-through"}}>{todos.todo}</p>
+                                     {todos.status? <button onClick={()=>{done(todos)}}>Done</button>:<button onClick={()=>{undo(todos)}}>Undo</button>} &nbsp;
+                                     <button onClick={()=>{deletetodo(todos)}}>Delete</button>
                                  </p>
                             
                   })
