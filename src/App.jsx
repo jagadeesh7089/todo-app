@@ -4,6 +4,7 @@ import Login from './features/login/login';
 import { useSelector } from 'react-redux';
 import { loginSlice } from './features/login/loginslice';
 import Home from './features/home/home';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   var {isloggedin}= useSelector(state=>state.loginReducer)
@@ -12,6 +13,7 @@ function App() {
       <div>
           {isloggedin && <Home></Home> }
           {!isloggedin && <Login></Login>}
+        
       </div>
      )
 }

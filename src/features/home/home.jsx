@@ -5,7 +5,7 @@ import { useGetAlltodosQuery, useLazyGetAlltodosQuery, useUpdatestatustodoMutati
 function Home(){
      
      var [lazyTodoFn] = useLazyGetAlltodosQuery()
-      var [newtodo,setNewtodo]=useState()
+      var [newtodo,setNewtodo]=useState("")
       var [updateFn]=useUpdatetodoMutation()
     var [updatestatusFn] =  useUpdatestatustodoMutation()
     var {user} =useSelector(state=>state.loginReducer)
@@ -16,18 +16,18 @@ function Home(){
         window.localStorage.removeItem("user")
         dispatch(updatelogin(false))
     }
+
     function addtask(){
+        
       if(!document.getElementById("d1").value==""){
-          
+        console.log(newtodo)
        var temp=JSON.parse(JSON.stringify(data[0]))
        temp.todos.push({
              todo:newtodo,
              status:true
        }) 
        updateFn(temp).then(res=>{
-        lazyTodoFn().then(res=>{
-            console.log(res)
-        })
+        lazyTodoFn(user.username)
       
        })
        var tt=document.getElementById("d1")
@@ -35,6 +35,7 @@ function Home(){
 
       }  
     }
+
     function done(todos){
          var temp=JSON.parse(JSON.stringify(data[0]))
             temp.todos.map(updtodo=>{
@@ -44,6 +45,7 @@ function Home(){
                 }
             })
             updatestatusFn(temp).then(res=>{
+                lazyTodoFn(user.username)
                
             })
          
@@ -57,6 +59,7 @@ function Home(){
                 }
             })
             updatestatusFn(temp).then(res=>{
+                lazyTodoFn(user.username)
             
             })
     }
@@ -65,7 +68,7 @@ function Home(){
        var temp=JSON.parse(JSON.stringify(data[0]))
            temp.todos.map(deltodo=>{
             
-            if(!(todos.todo==deltodo.todo)){
+            if(!(todos.todo===deltodo.todo)){
                ar.push(deltodo)
                 
             }
@@ -73,37 +76,41 @@ function Home(){
            })
           temp.todos=[...ar]
           updatestatusFn(temp).then(res=>{
+            lazyTodoFn(user.username)
             
           })    
           
     }
     return(
         <div>
-            <div className="d-flex">
-            <h3>Home</h3>
-            <h3><button onClick={()=>{logout()}}>Logout</button></h3>
+            <div className="d-flex justify-content-between bg bg-primary p-2">
+            <h3 style={{color:"white"}}>TODO-LIST</h3>
+            <button onClick={()=>{logout()}} className="btn btn-danger">Logout</button>
             </div>
+            <div className="p-3  bg bg-light shadow-lg">
+                
             <div>
                 {
                   !isLoading && data.map(t=>{
-                        return <div>{t.username}todolist</div>
+                        return <div className="fs-4 text-danger text-center">{(t.username)}todolist</div>
                     })
                 }
             </div>
-            <div>
-                <input type="text" onChange={(e)=>{setNewtodo(e.target.value)}} id="d1"/> &nbsp;&nbsp;
-                <button onClick={()=>{addtask()} } className="btn btn-info">Add task</button>
+            <div className="mb-4 text-center">
+                <input type="text" onChange={(e)=>{setNewtodo(e.target.value)}} className="border border-2 w-25" id="d1" /> &nbsp;&nbsp;
+                <button onClick={()=>{addtask()} } className="btn btn-info ">Add task</button>
             </div>
             <div>
                 {
                   !isLoading&& data[0].todos.map(todos=>{
-                        return  <p className="d-flex w-25 "> <p style={todos.status?{width:"50%"}:{width:"50%",color:"red",textDecoration:"line-through"}}>{todos.todo}</p>
-                                     {todos.status? <button onClick={()=>{done(todos)}}>Done</button>:<button onClick={()=>{undo(todos)}}>Undo</button>} &nbsp;
-                                     <button onClick={()=>{deletetodo(todos)}}>Delete</button>
+                        return  <p style={{margin:"1% 35%"}} className="d-flex  bg bg-light shadow-lg p-3">  <p style={todos.status?{width:"60%"}:{width:"60%",color:"red",textDecoration:"line-through"}}>{todos.todo}</p>
+                                     {todos.status? <button onClick={()=>{done(todos)}} className="btn btn-success">Done</button>:<button onClick={()=>{undo(todos)}} className="btn btn-warning">Undo</button>} &nbsp;
+                                     <button onClick={()=>{deletetodo(todos)}} className="btn btn-danger">Delete</button>
                                  </p>
                             
                   })
                 }
+            </div>
             </div>
            
         </div>
