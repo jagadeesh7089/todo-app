@@ -16,6 +16,14 @@ import { useNavigate } from "react-router-dom";
               },[400])
          },[1000])
 
+         var data1=document.getElementById("val")
+         data1.value=""
+         var data2=document.getElementById("va")
+         data2.value=""
+         var data3=document.getElementById("v")
+         data3.value=""
+
+
      }
     return(
         <div id="res" className="shadow-lg">
@@ -23,12 +31,12 @@ import { useNavigate } from "react-router-dom";
                     backgroundColor:" rgb(126,96,248)",color:"white"}}>Signup Form</div>
             <div className="p-5">
                 <form>
-                <i className="bi bi-person-circle icon"></i>
-                <input className="shadow-lg" type="text" placeholder="Username"/><br/><br/>
+                <i className="bi bi-person-circle icon"></i> 
+                <input className="shadow-lg" type="text" placeholder="Username" id="val"/><br/><br/>
                 <i class="bi bi-envelope icon"></i>
-                <input className="shadow-lg" type="text" placeholder="Email"/><br/><br/>
-                <i class="bi bi-lock-fill icon"></i>
-                <input className="shadow-lg" type="password" placeholder="Password"/><br/><br/>
+                <input className="shadow-lg" type="text" placeholder="Email" id="v"/><br/><br/>
+                <i class="bi bi-lock-fill icon"></i> 
+                <input className="shadow-lg" type="password" placeholder="Password" id="va"/><br/><br/>
                 
                 </form>
                 <button className="w-100 btn btn-primary" onClick={(e)=>{sig(e)}}>Signin</button>
